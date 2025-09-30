@@ -3,19 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <title>Estudos de Inglês - Emirates Test</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary-color: #b71c1c;
-      --secondary-color: #7f0000;
-      --light-accent-color: #fff0f0;
-      --hover-color: #d32f2f;
-      --correct-color: #4caf50;
-      --wrong-color: #b71c1c;
+      --primary-color: #D71921; /* Emirates Red */
+      --secondary-color: #333333;
+      --accent-color-gold: #c4a664;
+      --light-accent-color: #f5f5f5;
+      --correct-color: #28a745;
+      --wrong-color: #D71921;
+      --hover-color: #b0151b;
     }
-    * { box-sizing: border-box; }
+    * { 
+        box-sizing: border-box; 
+        margin: 0;
+        padding: 0;
+    }
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: var(--light-accent-color);
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       color: var(--secondary-color);
       margin: 0;
       padding: 20px;
@@ -24,62 +31,242 @@
       justify-content: center;
       align-items: center;
       flex-direction: column;
+      background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('airplane-background.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
     }
     .container {
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(127,0,0,0.3);
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      border: 1px solid rgba(255, 255, 255, 0.18);
       max-width: 800px;
       width: 100%;
       padding: 30px 40px;
       text-align: center;
       margin: 10px 0;
     }
-    h1, h2, h3 { color: var(--primary-color); margin-bottom: 15px; }
-    p { font-size: 1.1em; margin-bottom: 25px; color: #a52a2a; }
+     /* Dubai Palm background for the dashboard */
+    #dashboardScreen {
+       background-image: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)), url('dubai-palm-aerial.jpg');
+       background-size: cover;
+       background-position: center;
+    }
+    /* Lounge background for results */
+    #resultContainer {
+       background-image: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url('lounge-attendant.jpg');
+       background-size: cover;
+       background-position: center;
+    }
+    h1, h2, h3 { 
+      color: var(--primary-color); 
+      margin-bottom: 15px; 
+      font-weight: 700;
+    }
+    h1 {
+        font-size: 2.5em;
+        color: var(--accent-color-gold);
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    }
+    p { 
+      font-size: 1.1em; 
+      margin-bottom: 25px; 
+      color: var(--secondary-color); 
+    }
     button {
       background-color: var(--primary-color);
       color: white;
       border: none;
       padding: 15px 35px;
       font-size: 1.2em;
-      border-radius: 8px;
+      border-radius: 50px;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: all 0.3s ease;
       font-weight: 600;
       margin-top: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
     }
-    button:hover:not(:disabled) { background-color: var(--hover-color); }
-    button:disabled { background-color: #ccc; cursor: not-allowed; }
-    .timer { font-weight: 700; margin-bottom: 15px; color: var(--hover-color); font-size: 1.3em; }
-    .passage-container { text-align: left; margin-bottom: 20px; padding: 15px; border-radius: 8px; background-color: #f9f9f9; border-left: 5px solid var(--primary-color); overflow-y: auto; }
-    .passage-container h3 { margin-top: 0; }
+    button:hover:not(:disabled) { 
+      background-color: var(--hover-color); 
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+    button:disabled { 
+      background-color: #ccc; 
+      cursor: not-allowed; 
+      box-shadow: none;
+    }
+    .timer { 
+      font-weight: 700; 
+      margin-bottom: 15px; 
+      color: var(--primary-color); 
+      font-size: 1.3em; 
+    }
+    .passage-container { 
+      text-align: left; 
+      margin-bottom: 20px; 
+      padding: 20px; 
+      border-radius: 8px; 
+      background-color: #f9f9f9; 
+      border-left: 5px solid var(--accent-color-gold); 
+      overflow-y: auto; 
+    }
+    .passage-container h3 { margin-top: 0; color: var(--primary-color); }
     .passage-container p { color: #333; font-size: 1em; margin-bottom: 10px; }
-    .question { font-size: 1.3em; margin-bottom: 20px; min-height: 70px; color: var(--secondary-color); text-align: left; }
+    .question { 
+      font-size: 1.3em; 
+      margin-bottom: 20px; 
+      min-height: 70px; 
+      color: var(--secondary-color); 
+      text-align: left;
+      font-weight: 600;
+    }
     .options-container { text-align: left; }
-    label { display: block; margin-bottom: 14px; cursor: pointer; font-size: 1.1em; text-align: left; padding: 10px 15px; border-radius: 6px; border: 2px solid transparent; transition: background-color 0.2s, border-color 0.2s; user-select: none; }
-    label:hover { background-color: #fce4ec; border-color: var(--primary-color); }
-    input[type="radio"] { margin-right: 14px; transform: scale(1.3); vertical-align: middle; cursor: pointer; }
-    #openEndedContainer input[type="text"] { width: 100%; padding: 12px; font-size: 1.1em; border-radius: 6px; border: 2px solid #ccc; }
-    .result { margin-top: 20px; text-align: left; color: #4a0000; max-height: 400px; overflow-y: auto; padding-right: 10px; }
+    label { 
+      display: block; 
+      margin-bottom: 14px; 
+      cursor: pointer; 
+      font-size: 1.1em; 
+      text-align: left; 
+      padding: 12px 18px; 
+      border-radius: 8px; 
+      border: 2px solid #ddd; 
+      transition: all 0.2s ease; 
+      user-select: none;
+      background-color: #fff;
+    }
+    label:hover { 
+      background-color: #fce4ec; 
+      border-color: var(--primary-color); 
+    }
+    input[type="radio"] { 
+      margin-right: 14px; 
+      transform: scale(1.3); 
+      vertical-align: middle; 
+      cursor: pointer; 
+      accent-color: var(--primary-color);
+    }
+    #openEndedContainer input[type="text"] { 
+      width: 100%; 
+      padding: 12px; 
+      font-size: 1.1em; 
+      border-radius: 6px; 
+      border: 2px solid #ccc; 
+    }
+    .result { 
+      margin-top: 20px; 
+      text-align: left; 
+      color: #333; 
+      max-height: 400px; 
+      overflow-y: auto; 
+      padding-right: 10px; 
+    }
     .correct { color: var(--correct-color); font-weight: 700; }
     .wrong { color: var(--wrong-color); font-weight: 700; }
-    .explanation { font-style: italic; margin-left: 20px; color: #555; margin-bottom: 15px; }
-    hr { border: 0; border-top: 1px solid #ccc; margin: 15px 0; }
+    .explanation { 
+      font-style: italic; 
+      margin-left: 20px; 
+      color: #555; 
+      margin-bottom: 15px; 
+      background: #f0f0f0;
+      padding: 10px;
+      border-radius: 6px;
+    }
+    hr { border: 0; border-top: 1px solid #eee; margin: 20px 0; }
     .hidden { display: none !important; }
-    .chart { display: flex; justify-content: space-around; margin-bottom: 25px; text-align: center; align-items: flex-end; height: 200px; }
-    .bar { width: 80px; background-color: var(--primary-color); border-radius: 8px 8px 0 0; color: white; font-weight: 700; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding: 5px 0; cursor: default; transition: background-color 0.3s, height 0.5s ease-out; min-height: 50px; }
-    .bar:hover { background-color: var(--hover-color); }
-    .bar-label { margin-top: 8px; color: var(--secondary-color); font-weight: 600; }
-    .flashcard-section { margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; }
+    .chart { 
+      display: flex; 
+      justify-content: space-around; 
+      margin-bottom: 25px; 
+      text-align: center; 
+      align-items: flex-end; 
+      height: 200px; 
+      gap: 15px;
+    }
+    .bar { 
+      width: 80px; 
+      background: linear-gradient(to top, var(--primary-color), var(--hover-color));
+      border-radius: 8px 8px 0 0; 
+      color: white; 
+      font-weight: 700; 
+      display: flex; 
+      flex-direction: column; 
+      justify-content: flex-end; 
+      align-items: center; 
+      padding: 10px 0; 
+      cursor: default; 
+      transition: all 0.3s ease-out; 
+      min-height: 50px; 
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .bar-wrapper:hover .bar { 
+        background: linear-gradient(to top, var(--accent-color-gold), #e6c57f);
+        transform: translateY(-5px);
+    }
+    .bar-label { 
+      margin-top: 8px; 
+      color: var(--secondary-color); 
+      font-weight: 600; 
+    }
+    .bar-wrapper { cursor: pointer; text-align: center; }
+    .history-list { max-height: 400px; overflow-y: auto; padding: 10px; }
+    .history-item { 
+      display: flex; 
+      justify-content: space-between; 
+      align-items: center; 
+      padding: 15px; 
+      margin-bottom: 10px; 
+      border-radius: 8px; 
+      background: #fff;
+      text-align: left;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .history-item button { 
+      padding: 8px 15px; 
+      font-size: 1em; 
+      margin: 0; 
+      background-color: var(--accent-color-gold);
+      border-radius: 8px;
+    }
+    .history-item.approved { border-left: 5px solid var(--correct-color); }
+    .history-item.failed { border-left: 5px solid var(--wrong-color); }
+
+    .flashcard-section { 
+        margin-top: 40px; 
+        padding: 20px;
+        border-top: 1px solid #ddd; 
+        background-color: rgba(240, 240, 240, 0.5);
+        border-radius: 12px;
+    }
     .flashcard-container { perspective: 1000px; width: 100%; max-width: 500px; height: 300px; margin: 20px auto; }
     .flashcard { width: 100%; height: 100%; position: relative; transition: transform 0.6s; transform-style: preserve-3d; cursor: pointer; }
     .flashcard.is-flipped { transform: rotateY(180deg); }
-    .flashcard-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; justify-content: center; align-items: center; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; }
-    .flashcard-front { background: white; border: 2px solid var(--primary-color); font-size: 1.8em; font-weight: bold; }
+    .flashcard-face { 
+      position: absolute; 
+      width: 100%; 
+      height: 100%; 
+      backface-visibility: hidden; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      padding: 20px; 
+      border-radius: 12px; 
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
+      text-align: center; 
+    }
+    .flashcard-front { 
+      background: white; 
+      border: 2px solid var(--primary-color); 
+      font-size: 2.2em; 
+      font-weight: bold; 
+      color: var(--primary-color);
+    }
     .flashcard-back {
-      background: #f8f8f8;
-      color: #333;
+      background: var(--light-accent-color);
+      color: var(--secondary-color);
       transform: rotateY(180deg);
       font-size: 1.2em;
       display: flex;
@@ -90,7 +277,6 @@
     .flashcard-definition {
       font-size: 1.1em;
       line-height: 1.5;
-      color: #444;
       padding: 0 10px;
       margin-bottom: 20px;
     }
@@ -104,9 +290,9 @@
       text-align: center;
     }
     .flashcard-nav { margin-top: 20px; display: flex; justify-content: center; gap: 15px; }
-    .flashcard-nav button { font-size: 1em; padding: 12px 25px; }
+    .flashcard-nav button { font-size: 1em; padding: 12px 25px; border-radius: 50px; }
     #flashcard-correct-btn { background-color: var(--correct-color); }
-    #flashcard-correct-btn:hover { background-color: #5cb85c; }
+    #flashcard-correct-btn:hover { background-color: #218838; }
     #flashcard-wrong-btn { background-color: var(--wrong-color); }
     #flashcard-wrong-btn:hover { background-color: var(--hover-color); }
     .progress-counter { margin-top: 15px; font-size: 1.1em; font-weight: bold; }
@@ -115,23 +301,24 @@
 <body>
 
   <div class="container" id="loginScreen">
-    <h1>Bem-vindo aos Estudos de Inglês para Emirates Test</h1>
+    <h1>Bem-vindo ao Treinamento Emirates</h1>
+    <p style="color: #555;">Prepare-se para o teste de inglês e voe mais alto.</p>
     <button id="enterBtn">Entrar</button>
   </div>
 
   <div class="container hidden" id="dashboardScreen">
     <h1>Dashboard</h1>
-    <p>Meta para passar no teste: <strong>85%</strong> de acertos</p>
+    <p>Sua meta para aprovação é <strong>85%</strong>. Continue se dedicando!</p>
     <div class="chart" aria-label="Gráfico de desempenho">
-      <div><div class="bar" id="testsBar">0</div><div class="bar-label">Testes Feitos</div></div>
-      <div><div class="bar" id="passedBar">0</div><div class="bar-label">Provas Aprovadas</div></div>
-      <div><div class="bar" id="failedBar">0</div><div class="bar-label">Provas Reprovadas</div></div>
+      <div class="bar-wrapper"><div class="bar" id="testsBar">0</div><div class="bar-label">Testes Feitos</div></div>
+      <div class="bar-wrapper" id="passedBarBtn"><div class="bar" id="passedBar">0</div><div class="bar-label">Aprovado</div></div>
+      <div class="bar-wrapper" id="failedBarBtn"><div class="bar" id="failedBar">0</div><div class="bar-label">Reprovado</div></div>
     </div>
-    <button id="startQuizBtn">Iniciar Quiz</button>
+    <button id="startQuizBtn">Iniciar Novo Quiz</button>
     <div class="flashcard-section">
-        <h2>Cartões (Flashcards)</h2>
-        <p>Estude vocabulário e fixe novos conhecimentos. Questões erradas aparecerão mais vezes.</p>
-        <button id="startFlashcardsBtn">Iniciar Cartões</button>
+        <h2>Flashcards de Vocabulário</h2>
+        <p>Estude termos técnicos e fixe novos conhecimentos. Questões erradas aparecerão mais vezes.</p>
+        <button id="startFlashcardsBtn" style="background-color: var(--accent-color-gold);">Iniciar Flashcards</button>
     </div>
   </div>
 
@@ -155,6 +342,13 @@
     <button class="backToDashboardBtn">Voltar ao Dashboard</button>
   </div>
 
+  <div class="container hidden" id="historyScreen">
+    <h2 id="historyTitle">Histórico de Provas</h2>
+    <div class="history-list" id="historyList">
+      </div>
+    <button class="backToDashboardBtn">Voltar ao Dashboard</button>
+  </div>
+  
   <div class="container hidden" id="flashcardScreen">
     <h2>Flashcards</h2>
     <div id="flashcardCounter" class="progress-counter"></div>
@@ -243,7 +437,7 @@
     { id: 'fc32', term: 'RED FLAG VISIBLE', definition: 'Preflight check of the door is, check door locking indicators are locked and green, safety pin fitted, ____, observation window clean and clear, no debris around the door.', translation: 'Bandeira vermelha visível' },
     { id: 'fc33', term: 'SURVIVAL KIT', definition: 'This is a special aiding kit that provides water soluble tablets, sea dye marker, mirror and other necessary items. What is it called?', translation: 'Kit de sobrevivência' },
     { id: 'fc34', term: 'OVEN RACKS', definition: 'These are found inside the cage. Meals and bread are heated. Casseroles are places on it. What is it called?', translation: 'Prateleiras do forno' },
-    { id: 'fc35', term: 'EMERGENCY EXIT and OVERWING EXIT', definition: 'A type of an exit(emergency) door found in aircrafts is the ____.', translation: 'Saída de emergência e saída sobre a asa' },
+    { id: 'fc35', type: 'mcq', question: "O que significa o termo 'DITCHING'?", options: ["Pouso de emergência em terra", "Pouso de emergência na água", "Aterrisagem com vento forte", "Deslizamento na pista"], correct: 1, explanation: "Ditching é o termo para pouso de emergência na água." },
     { id: 'fc36', term: 'AMENITY KITS', definition: 'These are toiletry pouches with eye masks, earplugs and socks called ____.', translation: 'Kits de amenidades / necessaires' }
   ];
 
@@ -260,25 +454,26 @@
   let quizTimer;
   let timeLeft;
   let quizScore = 0;
-  let userQuizAnswers = [];
+  let userQuizAnswers = []; 
 
   let flashcardDeck = [];
   let currentFlashcardIndex = 0;
 
-  // DOM Elements
   const allScreens = document.querySelectorAll('.container');
   const loginScreen = document.getElementById('loginScreen');
   const dashboardScreen = document.getElementById('dashboardScreen');
   const quizContainer = document.getElementById('quizContainer');
   const resultContainer = document.getElementById('resultContainer');
   const flashcardScreen = document.getElementById('flashcardScreen');
+  const historyScreen = document.getElementById('historyScreen');
   
-  // Local Storage Keys
   const STATS_KEY = 'emiratesQuizStats_v3';
   const ERROR_TRACKING_KEY = 'emiratesErrorTracking_v1';
+  const HISTORY_KEY = 'emiratesQuizHistory_v1'; 
 
   let stats = loadData(STATS_KEY, { testsDone: 0, testsPassed: 0, testsFailed: 0 });
   let errorTracking = loadData(ERROR_TRACKING_KEY, { quizzes: {}, flashcards: {} });
+  let history = loadData(HISTORY_KEY, []); 
 
   // ===================================================================================
   // CORE FUNCTIONS (Data, Navigation, Weighting)
@@ -301,7 +496,6 @@
       const weightedPool = [];
       items.forEach(item => {
           const errorCount = errorDb[item.id] || 0;
-          // Add the item once, plus once for each error, creating a bias.
           for (let i = 0; i < errorCount + 1; i++) {
               weightedPool.push(item);
           }
@@ -321,6 +515,11 @@
   // DASHBOARD
   // ===================================================================================
   function updateDashboard() {
+    stats.testsDone = history.length;
+    stats.testsPassed = history.filter(t => t.passed).length;
+    stats.testsFailed = history.filter(t => !t.passed).length;
+    saveData(STATS_KEY, stats);
+
     document.getElementById('testsBar').textContent = stats.testsDone;
     document.getElementById('passedBar').textContent = stats.testsPassed;
     document.getElementById('failedBar').textContent = stats.testsFailed;
@@ -335,7 +534,7 @@
     
     currentQuizQuestionIndex = 0;
     quizScore = 0;
-    userQuizAnswers = [];
+    userQuizAnswers = []; 
     showScreen(quizContainer);
     showQuizQuestion();
   }
@@ -402,7 +601,7 @@
       updateTimerDisplay();
       if (timeLeft <= 0) {
         clearInterval(quizTimer);
-        handleQuizAction(); // Timeout counts as incorrect
+        handleQuizAction();
       }
     }, 1000);
   }
@@ -411,25 +610,36 @@
       clearInterval(quizTimer);
       const question = quizQuestions[currentQuizQuestionIndex];
       let isCorrect = false;
+      let userAnswer = '';
 
       if (question.type === 'mcq' || question.type === 'reading') {
           const selected = document.querySelector("input[name=option]:checked");
-          if (selected && parseInt(selected.value) === question.correct) {
+          const selectedIndex = selected ? parseInt(selected.value) : -1;
+          userAnswer = selectedIndex !== -1 ? question.options[selectedIndex] : 'Não Respondida';
+          if (selectedIndex === question.correct) {
               quizScore++;
               isCorrect = true;
           }
       } else if (question.type === 'open') {
-          const answer = document.getElementById('openEndedInput').value.trim();
-          if (answer.toLowerCase() === question.correct.toLowerCase()) {
+          userAnswer = document.getElementById('openEndedInput').value.trim();
+          if (userAnswer.toLowerCase() === question.correct.toLowerCase()) {
               quizScore++;
               isCorrect = true;
           }
       }
 
+      userQuizAnswers.push({
+          questionId: question.id,
+          userAnswer: userAnswer,
+          correctAnswer: question.type === 'mcq' || question.type === 'reading' ? question.options[question.correct] : question.correct,
+          isCorrect: isCorrect,
+          explanation: question.explanation
+      });
+
       if (!isCorrect) {
           errorTracking.quizzes[question.id] = (errorTracking.quizzes[question.id] || 0) + 1;
       }
-
+      
       currentQuizQuestionIndex++;
       if (currentQuizQuestionIndex < quizQuestions.length) {
         showQuizQuestion();
@@ -439,18 +649,99 @@
   }
 
   function endQuiz() {
-    stats.testsDone++;
     const percentage = Math.round((quizScore / quizQuestions.length) * 100);
-    if (percentage >= PASSING_SCORE_PERCENTAGE) {
-        stats.testsPassed++;
-    } else {
-        stats.testsFailed++;
-    }
-    saveData(STATS_KEY, stats);
+    const passed = percentage >= PASSING_SCORE_PERCENTAGE;
+
+    const quizResult = {
+        id: Date.now(),
+        score: quizScore,
+        totalQuestions: quizQuestions.length,
+        percentage: percentage,
+        passed: passed,
+        date: new Date().toLocaleDateString('pt-BR'),
+        questions: quizQuestions,
+        answers: userQuizAnswers
+    };
+
+    history.push(quizResult);
+    saveData(HISTORY_KEY, history);
     saveData(ERROR_TRACKING_KEY, errorTracking);
     
-    document.getElementById('result').innerHTML = `<h3>Seu resultado: ${quizScore} de ${quizQuestions.length} (${percentage}%)</h3>`;
+    stats.testsDone = history.length;
+    stats.testsPassed = history.filter(t => t.passed).length;
+    stats.testsFailed = history.filter(t => !t.passed).length;
+    saveData(STATS_KEY, stats);
+
+    let resultHtml = `<h3>Seu resultado: ${quizScore} de ${quizQuestions.length} (${percentage}%)</h3>`;
+    
+    userQuizAnswers.forEach((answer, index) => {
+        const question = quizQuestions[index];
+        const status = answer.isCorrect ? 'Correto' : 'Errado';
+        const statusClass = answer.isCorrect ? 'correct' : 'wrong';
+        
+        resultHtml += '<hr>';
+        resultHtml += `<h4>${index + 1}. ${question.question}</h4>`;
+        resultHtml += `<p>Status: <span class="${statusClass}">${status}</span></p>`;
+        resultHtml += `<p>Sua Resposta: <strong>${answer.userAnswer}</strong></p>`;
+        if (!answer.isCorrect) {
+            resultHtml += `<p>Resposta Correta: <span class="correct">${answer.correctAnswer}</span></p>`;
+            if (answer.explanation) {
+              resultHtml += `<p class="explanation">Explicação: ${answer.explanation}</p>`;
+            }
+        }
+    });
+
+    document.getElementById('result').innerHTML = resultHtml;
     showScreen(resultContainer);
+  }
+  
+  // ===================================================================================
+  // HISTÓRICO E REFAZER PROVA
+  // ===================================================================================
+  function showHistory(filterPassed) {
+    const filteredHistory = history.filter(test => test.passed === filterPassed);
+    const historyListEl = document.getElementById('historyList');
+    historyListEl.innerHTML = ''; 
+    
+    document.getElementById('historyTitle').textContent = filterPassed 
+      ? 'Provas Aprovadas (Histórico)' 
+      : 'Provas Reprovadas (Histórico)';
+
+    if (filteredHistory.length === 0) {
+      historyListEl.innerHTML = `<p style="text-align: center; margin-top: 30px;">Nenhuma prova ${filterPassed ? 'aprovada' : 'reprovada'} encontrada no histórico.</p>`;
+    } else {
+      filteredHistory.sort((a, b) => b.id - a.id).forEach((test) => { 
+        const statusClass = test.passed ? 'approved' : 'failed';
+        const item = document.createElement('div');
+        item.className = `history-item ${statusClass}`;
+        item.innerHTML = `
+          <div>
+            <strong>Teste de ${test.date}</strong>
+            <br>Acertos: ${test.score}/${test.totalQuestions} (${test.percentage}%)
+          </div>
+          <button data-quiz-id="${test.id}">Refazer Prova</button>
+        `;
+        historyListEl.appendChild(item);
+      });
+    }
+
+    showScreen(historyScreen);
+  }
+
+  function loadAndStartQuiz(quizId) {
+    const previousQuiz = history.find(test => test.id == quizId);
+    if (!previousQuiz) {
+        alert("Erro: Histórico do quiz não encontrado.");
+        return;
+    }
+    
+    quizQuestions = previousQuiz.questions;
+    userQuizAnswers = []; 
+    currentQuizQuestionIndex = 0;
+    quizScore = 0;
+    
+    showScreen(quizContainer);
+    showQuizQuestion();
   }
   
   // ===================================================================================
@@ -458,7 +749,6 @@
   // ===================================================================================
   function startFlashcards() {
     const weightedFlashcardPool = getWeightedArray(allFlashcards, errorTracking.flashcards);
-    // Seleciona 10 cartões aleatórios para a sessão
     flashcardDeck = shuffleArray(weightedFlashcardPool).slice(0, 10);
     currentFlashcardIndex = 0;
     document.getElementById('flashcardFinishBtn').classList.add('hidden');
@@ -476,7 +766,6 @@
     const flashcardEl = document.getElementById('flashcard');
     flashcardEl.classList.remove('is-flipped');
     document.getElementById('flashcardFront').textContent = card.term;
-    // Adiciona a tradução no verso do cartão com novo estilo
     document.getElementById('flashcardBack').innerHTML = `<div><p class="flashcard-definition">${card.definition}</p><p class="flashcard-translation">${card.translation}</p></div>`;
     document.getElementById('flashcardCounter').textContent = `Cartão ${currentFlashcardIndex + 1} de ${flashcardDeck.length}`;
     document.getElementById('flashcardNav').classList.add('hidden');
@@ -512,6 +801,16 @@
   document.getElementById('startQuizBtn').addEventListener('click', startQuiz);
   document.getElementById('nextBtn').addEventListener('click', handleQuizAction);
   
+  document.getElementById('passedBarBtn').addEventListener('click', () => showHistory(true));
+
+  document.getElementById('failedBarBtn').addEventListener('click', () => showHistory(false));
+
+  document.getElementById('historyList').addEventListener('click', (e) => {
+    if (e.target.tagName === 'BUTTON' && e.target.dataset.quizId) {
+        loadAndStartQuiz(e.target.dataset.quizId);
+    }
+  });
+
   document.getElementById('startFlashcardsBtn').addEventListener('click', startFlashcards);
   document.getElementById('flashcardContainer').addEventListener('click', () => {
     if (currentFlashcardIndex < flashcardDeck.length) {
@@ -532,4 +831,3 @@
 </script>
 </body>
 </html>
-
