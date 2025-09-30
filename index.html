@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Estudos de Inglês - Emirates Test</title>
+  <style>
+    :root {
+      --primary-color: #b71c1c;
+      --secondary-color: #7f0000;
+      --light-accent-color: #fff0f0;
+      --hover-color: #d32f2f;
+      --correct-color: #4caf50;
+      --wrong-color: #b71c1c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--light-accent-color);
+      color: var(--secondary-color);
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    .container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(127,0,0,0.3);
+      max-width: 800px;
+      width: 100%;
+      padding: 30px 40px;
+      text-align: center;
+      margin: 10px 0;
+    }
+    h1, h2, h3 { color: var(--primary-color); margin-bottom: 15px; }
+    p { font-size: 1.1em; margin-bottom: 25px; color: #a52a2a; }
+    button {
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 15px 35px;
+      font-size: 1.2em;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+    button:hover:not(:disabled) { background-color: var(--hover-color); }
+    button:disabled { background-color: #ccc; cursor: not-allowed; }
+    .timer { font-weight: 700; margin-bottom: 15px; color: var(--hover-color); font-size: 1.3em; }
+    .passage-container { text-align: left; margin-bottom: 20px; padding: 15px; border-radius: 8px; background-color: #f9f9f9; border-left: 5px solid var(--primary-color); overflow-y: auto; }
+    .passage-container h3 { margin-top: 0; }
+    .passage-container p { color: #333; font-size: 1em; margin-bottom: 10px; }
+    .question { font-size: 1.3em; margin-bottom: 20px; min-height: 70px; color: var(--secondary-color); text-align: left; }
+    .options-container { text-align: left; }
+    label { display: block; margin-bottom: 14px; cursor: pointer; font-size: 1.1em; text-align: left; padding: 10px 15px; border-radius: 6px; border: 2px solid transparent; transition: background-color 0.2s, border-color 0.2s; user-select: none; }
+    label:hover { background-color: #fce4ec; border-color: var(--primary-color); }
+    input[type="radio"] { margin-right: 14px; transform: scale(1.3); vertical-align: middle; cursor: pointer; }
+    #openEndedContainer input[type="text"] { width: 100%; padding: 12px; font-size: 1.1em; border-radius: 6px; border: 2px solid #ccc; }
+    .result { margin-top: 20px; text-align: left; color: #4a0000; max-height: 400px; overflow-y: auto; padding-right: 10px; }
+    .correct { color: var(--correct-color); font-weight: 700; }
+    .wrong { color: var(--wrong-color); font-weight: 700; }
+    .explanation { font-style: italic; margin-left: 20px; color: #555; margin-bottom: 15px; }
+    hr { border: 0; border-top: 1px solid #ccc; margin: 15px 0; }
+    .hidden { display: none !important; }
+    .chart { display: flex; justify-content: space-around; margin-bottom: 25px; text-align: center; align-items: flex-end; height: 200px; }
+    .bar { width: 80px; background-color: var(--primary-color); border-radius: 8px 8px 0 0; color: white; font-weight: 700; display: flex; flex-direction: column; justify-content: flex-end; align-items: center; padding: 5px 0; cursor: default; transition: background-color 0.3s, height 0.5s ease-out; min-height: 50px; }
+    .bar:hover { background-color: var(--hover-color); }
+    .bar-label { margin-top: 8px; color: var(--secondary-color); font-weight: 600; }
+    .flashcard-section { margin-top: 40px; padding-top: 20px; border-top: 1px solid #ddd; }
+    .flashcard-container { perspective: 1000px; width: 100%; max-width: 500px; height: 300px; margin: 20px auto; }
+    .flashcard { width: 100%; height: 100%; position: relative; transition: transform 0.6s; transform-style: preserve-3d; cursor: pointer; }
+    .flashcard.is-flipped { transform: rotateY(180deg); }
+    .flashcard-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; justify-content: center; align-items: center; padding: 20px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; }
+    .flashcard-front { background: white; border: 2px solid var(--primary-color); font-size: 1.8em; font-weight: bold; }
+    .flashcard-back {
+      background: #f8f8f8;
+      color: #333;
+      transform: rotateY(180deg);
+      font-size: 1.2em;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .flashcard-definition {
+      font-size: 1.1em;
+      line-height: 1.5;
+      color: #444;
+      padding: 0 10px;
+      margin-bottom: 20px;
+    }
+    .flashcard-translation {
+      font-size: 1.2em;
+      font-weight: bold;
+      color: var(--primary-color);
+      border-top: 2px solid #ddd;
+      width: 90%;
+      padding-top: 20px;
+      text-align: center;
+    }
+    .flashcard-nav { margin-top: 20px; display: flex; justify-content: center; gap: 15px; }
+    .flashcard-nav button { font-size: 1em; padding: 12px 25px; }
+    #flashcard-correct-btn { background-color: var(--correct-color); }
+    #flashcard-correct-btn:hover { background-color: #5cb85c; }
+    #flashcard-wrong-btn { background-color: var(--wrong-color); }
+    #flashcard-wrong-btn:hover { background-color: var(--hover-color); }
+    .progress-counter { margin-top: 15px; font-size: 1.1em; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="loginScreen">
+    <h1>Bem-vindo aos Estudos de Inglês para Emirates Test</h1>
+    <button id="enterBtn">Entrar</button>
+  </div>
+
+  <div class="container hidden" id="dashboardScreen">
+    <h1>Dashboard</h1>
+    <p>Meta para passar no teste: <strong>85%</strong> de acertos</p>
+    <div class="chart" aria-label="Gráfico de desempenho">
+      <div><div class="bar" id="testsBar">0</div><div class="bar-label">Testes Feitos</div></div>
+      <div><div class="bar" id="passedBar">0</div><div class="bar-label">Provas Aprovadas</div></div>
+      <div><div class="bar" id="failedBar">0</div><div class="bar-label">Provas Reprovadas</div></div>
+    </div>
+    <button id="startQuizBtn">Iniciar Quiz</button>
+    <div class="flashcard-section">
+        <h2>Cartões (Flashcards)</h2>
+        <p>Estude vocabulário e fixe novos conhecimentos. Questões erradas aparecerão mais vezes.</p>
+        <button id="startFlashcardsBtn">Iniciar Cartões</button>
+    </div>
+  </div>
+
+  <div class="container hidden" id="quizContainer">
+    <div class="timer" id="timer"></div>
+    <div id="passageContainer" class="passage-container hidden">
+      <h3 id="passageTitle"></h3>
+      <p id="passageText"></p>
+    </div>
+    <div class="question" id="question"></div>
+    <div class="options-container" id="mcqOptions"></div>
+    <div id="openEndedContainer" class="hidden">
+        <input type="text" id="openEndedInput" placeholder="Digite sua resposta aqui...">
+    </div>
+    <button id="nextBtn" disabled>Próxima</button>
+  </div>
+
+  <div class="container hidden" id="resultContainer">
+    <h2>Resultado do Quiz</h2>
+    <div class="result" id="result"></div>
+    <button class="backToDashboardBtn">Voltar ao Dashboard</button>
+  </div>
+
+  <div class="container hidden" id="flashcardScreen">
+    <h2>Flashcards</h2>
+    <div id="flashcardCounter" class="progress-counter"></div>
+    <div class="flashcard-container" id="flashcardContainer">
+        <div class="flashcard" id="flashcard">
+            <div class="flashcard-face flashcard-front" id="flashcardFront"></div>
+            <div class="flashcard-face flashcard-back" id="flashcardBack"></div>
+        </div>
+    </div>
+    <div class="flashcard-nav hidden" id="flashcardNav">
+      <button id="flashcard-wrong-btn">Errei</button>
+      <button id="flashcard-correct-btn">Acertei</button>
+    </div>
+    <button class="backToDashboardBtn hidden" id="flashcardFinishBtn">Finalizar Sessão</button>
+  </div>
+
+<script>
+  // ===================================================================================
+  // DATABASE
+  // ===================================================================================
+  const allQuestions = [
+    { id: 'q1', type: 'mcq', question: "John's new apartment has a spacious ______________ that overlooks the city.", options: ["terrace", "patio", "veranda", "balcony"], correct: 3, explanation: "A 'balcony' is a platform enclosed by a wall or balustrade on the outside of a building, with access from an upper-floor window or door." },
+    { id: 'q2', type: 'mcq', question: "The candidate's ___________ speech convinced the audience to vote for her.", options: ["Persuasive", "incoherent", "irrelevant", "concise"], correct: 0, explanation: "'Persuasive' means good at persuading someone to do or believe something through reasoning or the use of temptation." },
+    { id: 'q3', type: 'mcq', question: "The team worked _________ to complete the project before the deadline.", options: ["haphazardly", "diligently", "leisurely", "nonchalantly"], correct: 1, explanation: "'Diligently' means in a way that shows care and conscientiousness in one's work or duties." },
+    { id: 'q4', type: 'mcq', question: "The book was so __________ that I couldn't put it down.", options: ["Engaging", "trivial", "monotonous", "insipid"], correct: 0, explanation: "'Engaging' means charming and attractive, holding the attention." },
+    { id: 'q5', type: 'mcq', question: "Sarah's new job requires her to travel frequently. She needs to book a ___________ for her upcoming business trip.", options: ["trip ticket", "flight", "suitcase", "destination"], correct: 1, explanation: "A 'flight' is a journey made by air, especially in a plane." },
+    { id: 'q6', type: 'mcq', question: "Check your luggage on arrival to ensure no one has ___________ with it. It looks like someone has broken the lock.", options: ["opened", "tampered", "damaged", "touched"], correct: 1, explanation: "'Tampered' means to interfere with something in order to cause damage or make unauthorized alterations." },
+    { id: 'q7', type: 'mcq', question: "The elevator is _____________ maintenance today. Go to the classroom via the stairs.", options: ["in", "over", "under", "between"], correct: 2, explanation: "The correct idiom is 'under maintenance'." },
+    { id: 'q8', type: 'mcq', question: "He drives_______________.", options: ["careful", "care", "careless", "carefully"], correct: 3, explanation: "An adverb ('carefully') is needed to describe the verb 'drives'." },
+    { id: 'q9', type: 'mcq', question: "The woman ______________ car was parked next to mine, waved at me.", options: ["who", "whose", "whom", "which"], correct: 1, explanation: "'Whose' is the possessive pronoun used to ask or talk about who owns something." },
+    { id: 'q10', type: 'mcq', question: "They ____________ already left when I arrived.", options: ["have already", "has already", "had already", "having already"], correct: 2, explanation: "Past perfect ('had already') is used to describe a past event that happened before another past event." },
+    { id: 'q11', type: 'mcq', question: "Customers _____ smoke on board the aircraft. It is prohibited.", options: ["May", "Must not", "Might not", "Should"], correct: 1, explanation: "'Must not' indica proibição, que é o caso do fumo a bordo." },
+    { id: 'q12', type: 'mcq', question: "A decision was _____ to temporarily close the swimming pool during the winter months.", options: ["Taken", "Done", "Make", "Said"], correct: 0, explanation: "The passive voice structure is 'a decision was taken'." },
+    { id: 'q13', type: 'mcq', question: "Unfortunately there are many cases of passengers attempting to transport _____ items on the aircraft in their hand luggage.", options: ["Electrical", "Dangerous", "Secure", "Harmless"], correct: 1, explanation: "Items like flammable liquids and toxic substances are classified as 'dangerous' goods." },
+    { id: 'q14', type: 'reading', passageTitle: 'The Future of Aviation', passageText: 'The future of aviation holds tremendous potential for ground-breaking advancements. One key area of focus is sustainable aviation. With growing concerns about carbon emissions and environmental impact, there is a push to develop aircraft that are more fuel-efficient and powered by alternative energy sources, such as biofuels and electricity. Additionally, advancements in artificial intelligence are set to revolutionize air traffic management, making flights safer and more efficient. Drones are also expected to play a larger role, not just for recreational use, but for commercial deliveries and infrastructure inspection.', isFirstInPassage: true, question: "Why is there a push to develop more fuel-efficient and environmentally friendly aircraft?", options: ["To address concerns about carbon emissions and environmental impact", "To reduce noise pollution in airports", "To improve passenger experience during flights", "To increase the efficiency of air traffic management"], correct: 0 },
+    { id: 'q15', type: 'open', passageTitle: 'Cabin Crew Duties', passageText: "As a cabin crew member, your primary responsibility is passenger safety. Before each flight, you will conduct a safety briefing for passengers, demonstrating the use of safety equipment such as life vests and oxygen masks. During the flight, you must monitor the cabin, assist passengers with their needs, and respond to any emergencies that may arise. It is crucial to remain calm and professional under pressure. Familiarize yourself with the location of emergency equipment, such as fire extinguishers and first aid kits.", isFirstInPassage: true, question: "What is the primary responsibility of cabin crew members?", correct: "passenger safety" },
+    { id: 'q16', type: 'mcq', question: "The meeting is scheduled _____ Friday morning.", options: ["on", "in", "at", "by"], correct: 0, explanation: "'On' is used for specific days and dates." },
+    { id: 'q17', type: 'mcq', question: "The word 'ubiquitous' is closest in meaning to:", options: ["rare", "omnipresent", "scarce", "hidden"], correct: 1, explanation: "'Ubiquitous' means present, appearing, or found everywhere." },
+    { id: 'q18', type: 'mcq', question: "Before takeoff, the cabin crew must ensure all overhead bins are securely ____.", options: ["opened", "fastened", "stowed", "loose"], correct: 1, explanation: "'Fastened' means securely closed or locked." },
+    { id: 'q19', type: 'mcq', question: "If I _____ known you were coming, I would have baked a cake.", options: ["had", "have", "would have", "did"], correct: 0, explanation: "This is a third conditional structure (If + past perfect, would + have + past participle)." },
+    { id: 'q20', type: 'mcq', question: "The CEO's speech was _____, lasting only five minutes but covering all the key points.", options: ["verbose", "lengthy", "concise", "convoluted"], correct: 2, explanation: "'Concise' means giving a lot of information clearly and in a few words." },
+    { id: 'q21', type: 'mcq', question: "In case of a sudden drop in cabin pressure, oxygen masks will _____ automatically.", options: ["inflate", "deploy", "retract", "ignite"], correct: 1, explanation: "'Deploy' means to move into position for military action or, in this context, to become available for use." },
+    { id: 'q22', type: 'mcq', question: "She is studying to be _____ astronaut.", options: ["a", "an", "the", "no article"], correct: 1, explanation: "'An' is used before words that start with a vowel sound." },
+    { id: 'q23', type: 'mcq', question: "The company decided to _____ its operations to Asia to reduce costs.", options: ["expand", "diminish", "cease", "relocate"], correct: 3, explanation: "'Relocate' means to move to a new place and establish one's home or business there." },
+    { id: 'q24', type: 'mcq', question: "Could you please _____ the volume? I can't hear the announcement.", options: ["turn on", "turn up", "turn off", "turn in"], correct: 1, explanation: "The phrasal verb 'turn up' means to increase the volume or strength of something." },
+    { id: 'q25', type: 'mcq', question: "Getting this project done on time will be a piece of ____.", options: ["cake", "pie", "candy", "bread"], correct: 0, explanation: "The idiom 'a piece of cake' means something is very easy to do." },
+    { id: 'q26', type: 'reading', passageTitle: 'Airport Security Procedures', passageText: 'Airport security has become increasingly stringent over the last two decades. Passengers are required to go through multiple checkpoints, including baggage screening and personal body scans. Liquids in carry-on luggage are restricted to small containers, typically 100ml or less, and must be placed in a clear, resealable plastic bag. Laptops and other large electronic devices must be removed from bags and screened separately. These measures are in place to ensure the safety and security of all travelers.', isFirstInPassage: true, question: "According to the passage, what must be done with laptops during security screening?", options: ["They must be left in the carry-on bag", "They must be placed in a clear plastic bag", "They must be removed from bags for separate screening", "They are not allowed in carry-on luggage"], correct: 2 },
+    { id: 'q27', type: 'mcq', question: "By the time you arrive, we _____ dinner.", options: ["will finish", "will have finished", "are finishing", "finished"], correct: 1, explanation: "The future perfect tense ('will have finished') is used for an action that will be completed before another action in the future." },
+    { id: 'q28', type: 'mcq', question: "The plane's _____ was delayed by an hour due to bad weather.", options: ["arrival", "departure", "journey", "flight"], correct: 1, explanation: "'Departure' is the act of leaving a place, especially to start a journey." },
+    { id: 'q29', type: 'open', passageTitle: 'In-Flight Entertainment', passageText: 'Modern long-haul flights offer a wide array of in-flight entertainment (IFE) options. Each seat is typically equipped with a personal screen where passengers can choose from hundreds of movies, TV shows, music albums, and games. Many systems also provide interactive maps to track the flight\'s progress. The goal of IFE is to enhance the passenger experience and make long journeys more enjoyable.', isFirstInPassage: true, question: "What is the main goal of in-flight entertainment systems?", correct: "to enhance the passenger experience" },
+    { id: 'q30', type: 'mcq', question: "Despite the storm, the pilot managed to land the plane ____.", options: ["dangerously", "haphazardly", "safely", "recklessly"], correct: 2, explanation: "'Safely' is an adverb describing how the action (landing the plane) was performed." }
+  ];
+
+  const allFlashcards = [
+    { id: 'fc1', term: 'GALLEY', definition: 'This is the area dedicated to storing all the meals and beverages. You also have your carts, boilers, cutleries and oven racks.', translation: 'Cozinha de bordo / Copa' },
+    { id: 'fc2', term: 'SEA DYE MARKER', definition: 'This is spread on the water during a ditching emergency. It is a signal we give to others so they can spot us from far.', translation: 'Marcador de tinta para o mar' },
+    { id: 'fc3', term: 'COCKPIT', definition: 'This is where the professionals navigating the airplane sit. What is it called?', translation: 'Cabine de comando' },
+    { id: 'fc4', term: 'AISLE', definition: 'This is the corridor in an aircraft. What is it called?', translation: 'Corredor' },
+    { id: 'fc5', term: 'JUMPSEATS', definition: 'These are designated seats given to crew to sit on during their takeoff and landing. What is it called?', translation: 'Assentos dobráveis (para tripulação)' },
+    { id: 'fc6', term: 'CREW MEALS', definition: 'These are meals consumed by cabin crew onboard. What are they called?', translation: 'Refeições da tripulação' },
+    { id: 'fc7', term: 'BCF', definition: 'We use this safety equipment to fight the fire. What is it called?', translation: 'Extintor de incêndio (Halon)' },
+    { id: 'fc8', term: 'LIFE JACKET', definition: 'These are found under passenger and crew seats. In some cases for example the business class in the armrest compartment.', translation: 'Colete salva-vidas' },
+    { id: 'fc9', term: 'PREFLIGHT CHECK', definition: "When on board we do the preflight check of all safety emergency equipment's.", translation: 'Checagem pré-voo' },
+    { id: 'fc10', term: 'STANDBY CREW', definition: 'These crew get on hold who later are replaced if a crew calls sick are called...', translation: 'Tripulação de sobreaviso / reserva' },
+    { id: 'fc11', term: 'DEMO KIT', definition: 'This is used for presenting a manual demo. Normally it has the seatbelt, life jacket, oxygen mask and safety card.', translation: 'Kit de demonstração' },
+    { id: 'fc12', term: 'PA (PUBLIC ANNOUNCEMENT)', definition: 'Is made by the cockpit crew, cabin crew and supervisors for delivering a message (in different language\'s) to the passengers.', translation: 'Anúncio público' },
+    { id: 'fc13', term: 'BRAILLE CHART', definition: 'This is used to help blind passengers understand the safety procedure of the aircraft. What is it called?', translation: 'Tabela em Braille' },
+    { id: 'fc14', term: 'AIRBUS', definition: 'The AIRCRAFTS are manufactured in ____ which has one of its headquarters located in Toulouse, France.', translation: 'Airbus' },
+    { id: 'fc15', term: 'SEATBELTS', definition: 'We use our ____ during takeoff, landing and turbulence for our safety.', translation: 'Cintos de segurança' },
+    { id: 'fc16', term: 'PORTABLE OXYGEN', definition: 'During a post decompression we carry the ____ and administer it to passengers and crew who are unconscious.', translation: 'Oxigênio portátil' },
+    { id: 'fc17', term: 'DITCHING', definition: 'This is an emergency of when the aircraft lands on water instead of land, known as ____.', translation: 'Pouso na água / Amaragem' },
+    { id: 'fc18', term: 'SLIDE RAFTS', definition: 'We use these to jump onto and escape during an emergency. They inflate and it helps us either slide, run or they turn into rafts during ditching.', translation: 'Escorregadeiras/Botes salva-vidas' },
+    { id: 'fc19', term: 'TYPE A and TYPE C DOORS', definition: 'We have ____ and ____ and exits.', translation: 'Portas do Tipo A e Tipo C' },
+    { id: 'fc20', term: 'MAYDAY', definition: 'This is announced by the cockpit crew when there is an emergency. It is a signal that there is threat. It is internationally known as ____.', translation: 'Mayday (sinal de socorro)' },
+    { id: 'fc21', term: 'ASBESTOS GLOVES', definition: 'We use this to protect our hands from fire. What is it called?', translation: 'Luvas de amianto' },
+    { id: 'fc22', term: 'BUNK BEDS', definition: 'Crew use ____ during long haul flights to get some rest.', translation: 'Beliches' },
+    { id: 'fc23', term: 'WHITE DETACH HANDLE', definition: 'We pull ____ during ditching to detach the raft from the aircraft.', translation: 'Alavanca de desprendimento branca' },
+    { id: 'fc24', term: 'TROLLEY', definition: '____ setup helps us display the dishes, plates, cups, glasses to carry out a fine service in first and business class.', translation: 'Carrinho de serviço' },
+    { id: 'fc25', term: 'INTERCOM', definition: 'The ____ is used to have communication from one station to another between crew to crew or flight deck to crew.', translation: 'Interfone' },
+    { id: 'fc26', term: 'OVERHEAD BINS/HATRACKS', definition: 'are used to store trolley bags , backpacks and normal bags.', translation: 'Compartimentos de bagagem superiores' },
+    { id: 'fc27', term: 'CREW COMPARTMENT', definition: 'The crew place their belongings in the ____.', translation: 'Compartimento da tripulação' },
+    { id: 'fc28', term: 'CARTS', definition: 'The ____ are rolled out during service in economy class. Meal trays are found in it.', translation: 'Carrinhos' },
+    { id: 'fc29', term: 'OXYGEN MASKS', definition: 'The ____ drop down automatically when there is a fall in cabin pressure.', translation: 'Máscaras de oxigênio' },
+    { id: 'fc30', term: 'LAVATORIES', definition: 'Toilets onboard is/are called ____.', translation: 'Lavatórios / Banheiros' },
+    { id: 'fc31', term: 'BEDDING', definition: 'A ____ is prepared for passengers in First and Business class cabins to ensure they sleep comfortably.', translation: 'Roupa de cama' },
+    { id: 'fc32', term: 'RED FLAG VISIBLE', definition: 'Preflight check of the door is, check door locking indicators are locked and green, safety pin fitted, ____, observation window clean and clear, no debris around the door.', translation: 'Bandeira vermelha visível' },
+    { id: 'fc33', term: 'SURVIVAL KIT', definition: 'This is a special aiding kit that provides water soluble tablets, sea dye marker, mirror and other necessary items. What is it called?', translation: 'Kit de sobrevivência' },
+    { id: 'fc34', term: 'OVEN RACKS', definition: 'These are found inside the cage. Meals and bread are heated. Casseroles are places on it. What is it called?', translation: 'Prateleiras do forno' },
+    { id: 'fc35', term: 'EMERGENCY EXIT and OVERWING EXIT', definition: 'A type of an exit(emergency) door found in aircrafts is the ____.', translation: 'Saída de emergência e saída sobre a asa' },
+    { id: 'fc36', term: 'AMENITY KITS', definition: 'These are toiletry pouches with eye masks, earplugs and socks called ____.', translation: 'Kits de amenidades / necessaires' }
+  ];
+
+  // ===================================================================================
+  // GLOBAL VARIABLES & CONFIG
+  // ===================================================================================
+  const MAX_QUIZ_QUESTIONS = 30;
+  const TIME_PER_QUESTION_MCQ = 90;
+  const TIME_PER_QUESTION_READING = 180;
+  const PASSING_SCORE_PERCENTAGE = 85;
+
+  let quizQuestions = [];
+  let currentQuizQuestionIndex = 0;
+  let quizTimer;
+  let timeLeft;
+  let quizScore = 0;
+  let userQuizAnswers = [];
+
+  let flashcardDeck = [];
+  let currentFlashcardIndex = 0;
+
+  // DOM Elements
+  const allScreens = document.querySelectorAll('.container');
+  const loginScreen = document.getElementById('loginScreen');
+  const dashboardScreen = document.getElementById('dashboardScreen');
+  const quizContainer = document.getElementById('quizContainer');
+  const resultContainer = document.getElementById('resultContainer');
+  const flashcardScreen = document.getElementById('flashcardScreen');
+  
+  // Local Storage Keys
+  const STATS_KEY = 'emiratesQuizStats_v3';
+  const ERROR_TRACKING_KEY = 'emiratesErrorTracking_v1';
+
+  let stats = loadData(STATS_KEY, { testsDone: 0, testsPassed: 0, testsFailed: 0 });
+  let errorTracking = loadData(ERROR_TRACKING_KEY, { quizzes: {}, flashcards: {} });
+
+  // ===================================================================================
+  // CORE FUNCTIONS (Data, Navigation, Weighting)
+  // ===================================================================================
+  function loadData(key, defaultValue) {
+    const data = localStorage.getItem(key);
+    return data ? JSON.parse(data) : defaultValue;
+  }
+
+  function saveData(key, data) {
+    localStorage.setItem(key, JSON.stringify(data));
+  }
+
+  function showScreen(screenToShow) {
+    allScreens.forEach(screen => screen.classList.add('hidden'));
+    screenToShow.classList.remove('hidden');
+  }
+
+  function getWeightedArray(items, errorDb) {
+      const weightedPool = [];
+      items.forEach(item => {
+          const errorCount = errorDb[item.id] || 0;
+          // Add the item once, plus once for each error, creating a bias.
+          for (let i = 0; i < errorCount + 1; i++) {
+              weightedPool.push(item);
+          }
+      });
+      return weightedPool;
+  }
+
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+  }
+
+  // ===================================================================================
+  // DASHBOARD
+  // ===================================================================================
+  function updateDashboard() {
+    document.getElementById('testsBar').textContent = stats.testsDone;
+    document.getElementById('passedBar').textContent = stats.testsPassed;
+    document.getElementById('failedBar').textContent = stats.testsFailed;
+  }
+
+  // ===================================================================================
+  // QUIZ LOGIC
+  // ===================================================================================
+  function startQuiz() {
+    const weightedQuizPool = getWeightedArray(allQuestions, errorTracking.quizzes);
+    quizQuestions = shuffleArray(weightedQuizPool).slice(0, MAX_QUIZ_QUESTIONS);
+    
+    currentQuizQuestionIndex = 0;
+    quizScore = 0;
+    userQuizAnswers = [];
+    showScreen(quizContainer);
+    showQuizQuestion();
+  }
+
+  function showQuizQuestion() {
+    resetQuizState();
+    const question = quizQuestions[currentQuizQuestionIndex];
+    document.getElementById('question').innerText = `${currentQuizQuestionIndex + 1}. ${question.question}`;
+
+    let duration = TIME_PER_QUESTION_MCQ;
+    const passageContainer = document.getElementById('passageContainer');
+    if (question.type === 'reading' || question.type === 'open') {
+        passageContainer.classList.remove('hidden');
+        document.getElementById('passageTitle').innerText = question.passageTitle;
+        document.getElementById('passageText').innerText = question.passageText;
+        if (question.isFirstInPassage) duration = TIME_PER_QUESTION_READING;
+    } else {
+        passageContainer.classList.add('hidden');
+    }
+
+    const mcqOptionsEl = document.getElementById('mcqOptions');
+    const openEndedContainer = document.getElementById('openEndedContainer');
+    if (question.type === 'mcq' || question.type === 'reading') {
+        mcqOptionsEl.classList.remove('hidden');
+        openEndedContainer.classList.add('hidden');
+        question.options.forEach((option, index) => {
+            const label = document.createElement("label");
+            const radio = document.createElement("input");
+            radio.type = "radio"; radio.name = "option"; radio.value = index; radio.id = `option${index}`;
+            label.appendChild(radio);
+            label.append(` ${option}`);
+            label.addEventListener('click', () => { radio.checked = true; document.getElementById('nextBtn').disabled = false; });
+            mcqOptionsEl.appendChild(label);
+        });
+    } else if (question.type === 'open') {
+        mcqOptionsEl.classList.add('hidden');
+        openEndedContainer.classList.remove('hidden');
+        const input = document.getElementById('openEndedInput');
+        input.value = '';
+        input.oninput = () => { document.getElementById('nextBtn').disabled = input.value.trim() === ''; };
+        setTimeout(() => input.focus(), 100);
+    }
+    startQuizTimer(duration);
+  }
+  
+  function resetQuizState() {
+    clearInterval(quizTimer);
+    document.getElementById('nextBtn').disabled = true;
+    const mcqOptionsEl = document.getElementById('mcqOptions');
+    while (mcqOptionsEl.firstChild) mcqOptionsEl.removeChild(mcqOptionsEl.firstChild);
+  }
+
+  function startQuizTimer(duration) {
+    timeLeft = duration;
+    const timerEl = document.getElementById("timer");
+    const updateTimerDisplay = () => {
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      timerEl.textContent = `Tempo: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    };
+    updateTimerDisplay();
+    quizTimer = setInterval(() => {
+      timeLeft--;
+      updateTimerDisplay();
+      if (timeLeft <= 0) {
+        clearInterval(quizTimer);
+        handleQuizAction(); // Timeout counts as incorrect
+      }
+    }, 1000);
+  }
+
+  function handleQuizAction() {
+      clearInterval(quizTimer);
+      const question = quizQuestions[currentQuizQuestionIndex];
+      let isCorrect = false;
+
+      if (question.type === 'mcq' || question.type === 'reading') {
+          const selected = document.querySelector("input[name=option]:checked");
+          if (selected && parseInt(selected.value) === question.correct) {
+              quizScore++;
+              isCorrect = true;
+          }
+      } else if (question.type === 'open') {
+          const answer = document.getElementById('openEndedInput').value.trim();
+          if (answer.toLowerCase() === question.correct.toLowerCase()) {
+              quizScore++;
+              isCorrect = true;
+          }
+      }
+
+      if (!isCorrect) {
+          errorTracking.quizzes[question.id] = (errorTracking.quizzes[question.id] || 0) + 1;
+      }
+
+      currentQuizQuestionIndex++;
+      if (currentQuizQuestionIndex < quizQuestions.length) {
+        showQuizQuestion();
+      } else {
+        endQuiz();
+      }
+  }
+
+  function endQuiz() {
+    stats.testsDone++;
+    const percentage = Math.round((quizScore / quizQuestions.length) * 100);
+    if (percentage >= PASSING_SCORE_PERCENTAGE) {
+        stats.testsPassed++;
+    } else {
+        stats.testsFailed++;
+    }
+    saveData(STATS_KEY, stats);
+    saveData(ERROR_TRACKING_KEY, errorTracking);
+    
+    document.getElementById('result').innerHTML = `<h3>Seu resultado: ${quizScore} de ${quizQuestions.length} (${percentage}%)</h3>`;
+    showScreen(resultContainer);
+  }
+  
+  // ===================================================================================
+  // FLASHCARD LOGIC
+  // ===================================================================================
+  function startFlashcards() {
+    const weightedFlashcardPool = getWeightedArray(allFlashcards, errorTracking.flashcards);
+    // Seleciona 10 cartões aleatórios para a sessão
+    flashcardDeck = shuffleArray(weightedFlashcardPool).slice(0, 10);
+    currentFlashcardIndex = 0;
+    document.getElementById('flashcardFinishBtn').classList.add('hidden');
+    document.getElementById('flashcardNav').classList.add('hidden');
+    showScreen(flashcardScreen);
+    showFlashcard();
+  }
+
+  function showFlashcard() {
+    if (currentFlashcardIndex >= flashcardDeck.length) {
+        finishFlashcardSession();
+        return;
+    }
+    const card = flashcardDeck[currentFlashcardIndex];
+    const flashcardEl = document.getElementById('flashcard');
+    flashcardEl.classList.remove('is-flipped');
+    document.getElementById('flashcardFront').textContent = card.term;
+    // Adiciona a tradução no verso do cartão com novo estilo
+    document.getElementById('flashcardBack').innerHTML = `<div><p class="flashcard-definition">${card.definition}</p><p class="flashcard-translation">${card.translation}</p></div>`;
+    document.getElementById('flashcardCounter').textContent = `Cartão ${currentFlashcardIndex + 1} de ${flashcardDeck.length}`;
+    document.getElementById('flashcardNav').classList.add('hidden');
+  }
+
+  function handleFlashcardFeedback(isCorrect) {
+      const card = flashcardDeck[currentFlashcardIndex];
+      if (!isCorrect) {
+          errorTracking.flashcards[card.id] = (errorTracking.flashcards[card.id] || 0) + 1;
+          saveData(ERROR_TRACKING_KEY, errorTracking);
+      }
+      currentFlashcardIndex++;
+      showFlashcard();
+  }
+
+  function finishFlashcardSession() {
+      document.getElementById('flashcardFront').textContent = "Sessão Concluída!";
+      document.getElementById('flashcardBack').textContent = "Bom trabalho! Continue praticando.";
+      document.getElementById('flashcard').classList.add('is-flipped');
+      document.getElementById('flashcardCounter').textContent = `Você completou ${flashcardDeck.length} cartões.`;
+      document.getElementById('flashcardNav').classList.add('hidden');
+      document.getElementById('flashcardFinishBtn').classList.remove('hidden');
+  }
+
+  // ===================================================================================
+  // EVENT LISTENERS
+  // ===================================================================================
+  document.getElementById('enterBtn').addEventListener('click', () => {
+    updateDashboard();
+    showScreen(dashboardScreen);
+  });
+
+  document.getElementById('startQuizBtn').addEventListener('click', startQuiz);
+  document.getElementById('nextBtn').addEventListener('click', handleQuizAction);
+  
+  document.getElementById('startFlashcardsBtn').addEventListener('click', startFlashcards);
+  document.getElementById('flashcardContainer').addEventListener('click', () => {
+    if (currentFlashcardIndex < flashcardDeck.length) {
+        document.getElementById('flashcard').classList.toggle('is-flipped');
+        document.getElementById('flashcardNav').classList.remove('hidden');
+    }
+  });
+  document.getElementById('flashcard-correct-btn').addEventListener('click', () => handleFlashcardFeedback(true));
+  document.getElementById('flashcard-wrong-btn').addEventListener('click', () => handleFlashcardFeedback(false));
+
+  document.querySelectorAll('.backToDashboardBtn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        updateDashboard();
+        showScreen(dashboardScreen);
+    });
+  });
+
+</script>
+</body>
+</html>
+
