@@ -530,7 +530,31 @@
   // ===================================================================================
   function startQuiz() {
     const weightedQuizPool = getWeightedArray(allQuestions, errorTracking.quizzes);
-    quizQuestions = shuffleArray(weightedQuizPool).slice(0, MAX_QUIZ_QUESTIONS);
+    const shuffledPool = shuffleArray(weightedQuizPool);
+
+    // --- Início da Correção ---
+    // Cria uma lista única de perguntas a partir do pool embaralhado,
+    // garantindo que cada questão apareça apenas uma vez.
+    const uniqueQuestions = [];
+    const seenIds = new Set(); // Usa um Set para controlar os IDs já adicionados
+
+    for (const question of shuffledPool) {
+      if (!seenIds.has(question.id)) {
+        uniqueQuestions.push(question);
+        seenIds.add(question.id);
+      }
+    }
+
+    // Se, por algum motivo, a lista única ainda não tiver o número máximo de questões,
+    // preenche com as questões restantes que ainda não foram selecionadas.
+    if (uniqueQuestions.length < MAX_QUIZ_QUESTIONS) {
+      const remainingQuestions = allQuestions.filter(q => !seenIds.has(q.id));
+      uniqueQuestions.push(...shuffleArray(remainingQuestions));
+    }
+
+    // Seleciona o número máximo de questões da lista única.
+    quizQuestions = uniqueQuestions.slice(0, MAX_QUIZ_QUESTIONS);
+    // --- Fim da Correção ---
     
     currentQuizQuestionIndex = 0;
     quizScore = 0;
